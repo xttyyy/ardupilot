@@ -997,7 +997,23 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
     uint8_t result = MAV_RESULT_FAILED;         // assume failure.  Each messages id is responsible for return ACK or NAK if required
 
     switch (msg->msgid) {
+    case MAVLINK_MSG_ID_GPS_RAW_INT:  //MAV ID: 24 , remoter tracker sended gps location;
+        {
 
+            //hal.console->printf("get gps tracker");
+            int32_t osd_lat = mavlink_msg_gps_raw_int_get_lat(msg);
+            int32_t osd_lon = mavlink_msg_gps_raw_int_get_lon(msg);
+            int32_t osd_alt = mavlink_msg_gps_raw_int_get_alt(msg);
+            uint8_t osd_fix_type = mavlink_msg_gps_raw_int_get_fix_type(msg);
+            uint8_t osd_satellites_visible = mavlink_msg_gps_raw_int_get_satellites_visible(msg);
+
+            //hal.console->printf("gps tracker %d,%d",osd_lat,osd_lon);
+            //fix_type 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS, 5: RTK.
+            //telem1��MAVLINK_COMM_1    telem2:MAVLINK_COMM_2
+            mavlink_msg_gps_raw_int_send(MAVLINK_COMM_1, 963497464, 100, osd_lat, osd_lon, osd_alt, 1, 1, 1, 1,osd_satellites_visible);
+
+           break;
+        }
     case MAVLINK_MSG_ID_HEARTBEAT:      // MAV ID: 0
     {
         // We keep track of the last time we received a heartbeat from our GCS for failsafe purposes

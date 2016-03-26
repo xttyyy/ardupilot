@@ -897,9 +897,14 @@ GCS_MAVLINK::update(run_cli_fn run_cli)
             if (msg_snoop != NULL) {
                 msg_snoop(&msg);
             }
-            if (routing.check_and_forward(chan, &msg)) {
-                handleMessage(&msg);
-            }
+
+            if(chan==MAVLINK_COMM_2)
+                        {
+                            handleMessage(&msg);
+                        }
+                        else if (routing.check_and_forward(chan, &msg)) {
+                            handleMessage(&msg);
+                        }
         }
     }
 
